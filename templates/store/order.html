@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{%block title%}
+Orders
+    {%endblock%}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Poppins', sans-serif;
+    }
+    .order-container {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 20px;
+        gap: 20px;
+        white-space: nowrap;
+    }
+    .order-card {
+        display: inline-block;
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        min-width: 300px;
+        text-align: center;
+    }
+    .order-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .order-id {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+    }
+    .order-details {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+    .order-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+    .btn-back {
+        display: block;
+        margin: 30px auto;
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        color: white;
+        background: #007bff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        width: fit-content;
+        transition: background 0.3s, transform 0.2s;
+    }
+    .btn-back:hover {
+        background: #0056b3;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container mt-5 text-center">
+    <h2 class="text-primary mb-4">Your Order History</h2>
+    <div class="order-container">
+        {% for order in orders %}
+        <div class="order-card">
+            <p class="order-id">Order #{{ forloop.counter }}</p>
+            <p class="order-details">Placed on: {{ order.created_at|date:"F d, Y" }}</p>
+            <p class="order-price">₹{{ order.total_price }}</p>
+        </div>
+        {% empty %}
+        <div class="text-muted">
+            <p>No past orders found.</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% if order.id %}
+    <a href="{% url 'track_order' order.id %}" class="btn btn-outline-primary">Track Order</a>
+{% else %}
+    <span class="text-muted">Tracking Not Available</span>
+{% endif %}
+
+    <a href="{% url 'home' %}" class="btn-back">⬅ Back to Shop</a>
+</div>
+{%include 'footer.html'%}
+
+{% endblock %}

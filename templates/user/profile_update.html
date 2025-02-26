@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{%block title%}
+Profile-Update
+    {%endblock%}
+{% block content %}
+<div class="container">
+    <div class="row my-4">
+        <div class="col">
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header text-white" style="background-color: #2b7abd;">
+                        Customer Detail Page
+                    </div>
+                    <div class="row p-3">
+                        <div class="col-md-8">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ u_form.as_p }}
+                                {{ p_form.as_p }}
+
+                                <div class="mb-3">
+                                    <label class="form-label">Select Farm Location:</label>
+                                    <div id="map" style="height: 300px; width: 100%;"></div>  
+                                </div>
+
+                                <!-- Auto Detect Location Button -->
+                                <button type="button" class="btn btn-info mb-3" onclick="getLocation()">📍 Detect My Location</button>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Latitude:</label>
+                                    <input type="text" id="latitude" name="latitude" class="form-control" 
+                                           value="{{ p_form.instance.latitude|default:31.6340 }}" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Longitude:</label>
+                                    <input type="text" id="longitude" name="longitude" class="form-control" 
+                                           value="{{ p_form.instance.longitude|default:74.8723 }}" readonly>
+                                </div>
+                               
+                                <input class="btn btn-primary mt-3" type="submit" value="Update">
+                            </form>
+                        </div>
+
+                        <div class="col-md-4">
+                            <img class="img-thumbnail" src="{{ user.profile.profile_image.url }}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Google Maps Script -->
+<script>
+    function initMap() {
+        var defaultLocation = { lat: 31.6340, lng: 74.8723 }; // Default: Amritsar
+    
+        // ✅ Initialize the Map
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: defaultLocation
+        });
+    
+        // ✅ Create the Marker
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+            position: defaultLocation,
+            map: map,
+            title: "Your Location",
+        });
+    
+        // ✅ Function to Update Location Fields
+        function updateLocation(lat, lng) {
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lng;
+        }
+    
+        // ✅ Get User's Current Location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+    
+                map.setCenter(userLocation);
+                marker.position = userLocation; // ✅ Move marker to user's location
+                updateLocation(userLocation.lat, userLocation.lng);
+            }, function(error) {
+                console.warn("Geolocation failed or permission denied.");
+            });
+        } else {
+            console.warn("Geolocation is not supported by this browser.");
+        }
+    
+        // ✅ Allow Dragging Marker & Update Coordinates
+        map.addListener("click", (event) => {
+            let newPosition = event.latLng;
+            marker.position = newPosition; // Move marker to new location
+            updateLocation(newPosition.lat(), newPosition.lng()); // Update input fields
+        });
+    }
+    </script>
+    
+    <!-- ✅ Load Google Maps API with your valid API Key -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap&loading=async"></script>
+    
+    {% include 'footer.html' %}
+
+{% endblock %}

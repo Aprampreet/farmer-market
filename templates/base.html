@@ -1,0 +1,235 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+    {%block title%}
+    {%endblock%}
+</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">  
+</head>
+<style>
+  
+    
+    .navbar{
+    
+    width:100%;
+    z-index: 1000000;
+    
+  backdrop-filter: blur(8px);
+  background-color: rgba(200, 200, 200, 0.4);
+  
+}
+   
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+
+    .card-sl {
+        border-radius: 8px;
+        
+        box-shadow: 0 0 40px rgba(33,33,33,.2); 
+        transition: box-shadow .5s;
+    }
+
+    .card-image img {
+        max-height: 100%;
+        max-width: 100%;
+        border-radius: 8px 8px 0px 0;
+    }
+
+    
+
+    .card-heading {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 15px;
+    }
+
+    .card-text {
+        padding: 10px 15px;
+        font-size: 14px;
+        color: #636262;
+    }
+
+    .card-button {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+        width: 100%;
+        background-color: #1F487E;
+        color: #fff;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .card-button:hover {
+        text-decoration: none;
+        background-color: #1D3461;
+        color: #fff;
+
+    }
+    .card-sl:hover {
+        box-shadow: 0 0px 90px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
+}
+.card-action {
+        position: relative;
+        float: right;
+        margin-top: -25px;
+        margin-right: 20px;
+        z-index: 2;
+        color: #E26D5C;
+        background: #fff;
+        border-radius: 100%;
+        padding: 15px;
+        font-size: 15px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .card-action:hover {
+        color: #fff;
+        background: #E26D5C;
+    }
+
+
+   
+    
+</style>
+  <body class="bg-white" style="font-family: Gilroy,sans-serif;">
+    <div class="container-fluid bg-primary text-white d-flex align-items-center justify-content-center text-center p-2" 
+    style="background-color: #2b7abd ; min-height: 46px; font-size: 1rem; flex-wrap: wrap;">
+   <p class="m-0 text-wrap">New | 3-in-1 E20 | Why Buy Three When One Does It All?</p>
+</div>
+   
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="border-bottom: 1px solid #a3a3a3;">
+      <div class="container">
+          <!-- Navbar Brand -->
+          <a class="navbar-brand" href="#">Arritio</a>
+  
+          <!-- Toggle Button for Mobile -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <!-- Navbar Links -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <!-- Left-aligned items -->
+              <ul class="navbar-nav d-flex align-items-center">
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" aria-current="page" href="{% url 'home' %}">
+                          <i class="bi bi-house-fill"></i> Home
+                      </a>
+                  </li>
+                  
+                  {% if user.is_authenticated %}
+                  <li class="nav-item">
+                    <a class="nav-link active p-2"  href="{% url 'nearby_farmers_products' %}">
+                        <i class="bi bi-geo-alt-fill"></i> Nearby 
+                    </a>
+                </li>
+                
+                  
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" aria-current="page" href="{% url 'view_cart' %}">
+                          <i class="bi bi-cart-plus-fill"></i> Cart
+                      </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link active p-2"  href="{% url 'wishlist' %}">
+                        <i class="bi bi-suit-heart-fill"></i> Wishlist 
+                    </a>
+                </li>
+
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" aria-current="page" href="{% url 'order_history' %}">
+                          <i class="bi bi-box2-fill"></i> Orders
+                      </a>
+                  </li>
+                  {% if not request.user.becomefarmer_set.exists or not request.user.becomefarmer_set.first.become_farmer_vendor %}
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" href="{% url 'become_farmer' %}">
+                          <i class="bi bi-box-arrow-in-left"></i> Become Farmer
+                      </a>
+                  </li>
+                  {% endif %}
+                  {% endif %}
+                  
+                  
+                  
+                  {% with user.becomefarmer_set.first as farmer %}
+                  {% if farmer and farmer.become_farmer_vendor %}
+                      <li class="nav-item">
+                          <a class="nav-link active p-2" aria-current="page" href="{% url 'add_product' %}">
+                              <i class="bi bi-plus-square-fill"></i> Add Product
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link active p-2" aria-current="page" href="{% url 'farmer_orders' %}">
+                              <i class="bi bi-list-columns-reverse"></i> Order List
+                          </a>
+                      </li>
+                  {% endif %}
+              {% endwith %}
+              </ul>
+  
+              <ul class="navbar-nav ms-auto  d-flex align-items-center">
+                  {% if user.is_authenticated %}
+
+                  <li class="nav-item dropdown" >
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" style="color: black;" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="rounded-circle me-2" width="30" height="30">
+                        {{user.username}}
+                    </a>
+                    <ul class="dropdown-menu ">
+                      <li><a class="dropdown-item" href="{%url 'profile'%}" >Profile</a></li>
+                        <li><a class="dropdown-item" href="{%url 'login'%}">Login Another Account</a></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+                
+                {% if user.is_superuser %}
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" aria-current="page" href="{% url 'admin_farmer_requests' %}">
+                          <i class="bi bi-box-arrow-in-left"></i> Admin
+                      </a>
+                  </li>
+                  {% endif %}
+                  
+                  {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" href="{% url 'register' %}">
+                          <i class="bi bi-person-plus-fill"></i> Register
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link active p-2" href="{% url 'login' %}">
+                          <i class="bi bi-box-arrow-in-left"></i> Login
+                      </a>
+                  </li>
+                  {% endif %}
+                  
+                 
+              </ul>
+          </div>
+      </div>
+  </nav>
+  
+            
+
+    
+      {%block content%}
+      {%endblock%}
+
+
+     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

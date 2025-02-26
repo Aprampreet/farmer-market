@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{%block title%}
+Farmer-Orders
+    {%endblock%}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">📦 Orders for Your Products</h2>
+    <hr>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Order #{{ order.id }} - {{ order.status }}</h5>
+                <p><strong>Customer:</strong> {{ order.full_name }}</p>
+                <p><strong>Phone:</strong> {{ order.phone }}</p>
+                <p><strong>Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.state }} - {{ order.zip_code }}</p>
+
+                <h6>Products Ordered:</h6>
+                <ul>
+                    {% for item in order.farmer_products %}
+                        <li>
+                            <strong>{{ item.product.name }}</strong> - Quantity: {{ item.quantity }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <p><strong>Total Order Price:</strong> ₹{{ order.total_price }}</p>
+
+                <!-- 🟢 Button to Open QR Code Modal -->
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#qrModal{{ order.id }}">
+                    Generate Order QR
+                </button>
+            </div>
+        </div>
+
+        <!-- 🟢 Bootstrap Modal for Order QR Code -->
+        <div class="modal fade " style="margin-top: 7%;" id="qrModal{{ order.id }}" tabindex="-1" aria-labelledby="qrModalLabel{{ order.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrModalLabel{{ order.id }}">QR Code for Order #{{ order.id }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="{% url 'generate_order_qr' order.id %}" alt="Order QR Code" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-muted">No orders for your products yet.</p>
+    {% endif %}
+</div>
+{% include 'footer.html' %}
+
+{% endblock %}

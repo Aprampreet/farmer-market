@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block title%}
+Home
+    {%endblock%}
+{% block content %}
+{% include 'baner.html' %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+  html {
+    scroll-behavior: smooth;
+}
+  /* Global Styles */
+ 
+  /* Custom Card Styling */
+  
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+  .product-image:hover {
+    opacity: 0.9;
+  }
+  .card-content {
+    padding: 2rem;
+  }
+  .card-content h2 {
+    font-weight: 600;
+  }
+  .card-content p,
+  .card-content li {
+    color: #555;
+  }
+  .list-group-item {
+    border: none;
+    padding: 0.5rem 0;
+  }
+  .btn-custom {
+    background: linear-gradient(45deg, #28a745, #218838);
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: background 0.3s ease;
+  }
+  
+  .video-container video {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .ptr {
+     
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  .ptr:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(198, 186, 186, 0.15);
+    }
+</style>
+{%include 'messages.html'%}
+
+<div class="container my-5" id="products-section">
+  
+  <div class="row">
+   
+    
+    <section>
+     
+      <div class="container  ">
+        <div class="d-flex justify-content-between align-items-center pb-3">
+          
+      
+          <div class="d-flex" >
+              <form method="GET" action="{% url 'home' %}" class="d-flex align-items-center me-3">
+                  <label class="me-2 fw-bold text-muted">Filter by:</label>
+                  <select name="category" class="form-select form-select-sm w-auto" onchange="this.form.submit()" style="height: auto;">
+                      <option value="">All Categories</option>
+                      <option value="organic" {% if selected_category == 'organic' %}selected{% endif %}>Organic</option>
+                      <option value="semi_organic" {% if selected_category == 'semi_organic' %}selected{% endif %}>Semi-Organic</option>
+                      <option value="chemical" {% if selected_category == 'chemical' %}selected{% endif %}>Chemical</option>
+                  </select>
+              </form>
+      
+              <form method="GET" action="{% url 'home' %}" class="d-flex align-items-center">
+                  <label class="me-2 fw-bold text-muted">Type:</label>
+                  <select name="type" class="form-select form-select-sm w-auto" onchange="this.form.submit()" style="height: auto;">
+                      <option value="">All Types</option>
+                      <option value="fruits" {% if selected_type == 'fruits' %}selected{% endif %}>Fruits</option>
+                      <option value="vegitables" {% if selected_type == 'vegitables' %}selected{% endif %}>Vegetables</option>
+                      <option value="dry-fruits" {% if selected_type == 'dry-fruits' %}selected{% endif %}>Dry-Fruits</option>
+                  </select>
+              </form>
+          </div>
+          <h5 class="m-0" >
+            <form class="d-flex" method="GET" action="{% url 'home' %}" role="search" style="width: 480px;">
+              <input 
+                  class="form-control me-2 w-100" 
+               
+                  type="search" 
+                  name="search" 
+                  placeholder="Search Products.." 
+                  aria-label="Search"
+                  value="{{ search_query|default:'' }}"  >
+              <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+          
+          </h5>
+      </div>
+      
+      
+        
+
+    <div class="row ">
+      {% for product in products %}
+      <div  class="col-lg-4 col-md-4 col-sm-4 d-flex ">
+        <div class="card w-200 my-2 shadow-2-strong ptr" style="background-color: #F7F8F9; border: none; border-radius: 30px;">
+          <a href="{% url 'product_detail' product.id %}"><img src="{{ product.image.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" /></a>
+          <div class="card-body d-flex flex-column">
+           <p class="text-muted"> ({{product.type}})</p>
+            <h5 class="card-title"><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></h5>
+            <p>{{product.category}}</p>
+            <p class="text-muted">
+              {%if product.average_rating == 0%}
+              <p>No raitings yet</p>
+              {%else%}
+              {% for i in "12345" %}
+               
+              {% if forloop.counter <= product.average_rating %}
+              <i class="bi bi-star-fill text-warning"></i>
+              {% else %}
+              <i class="bi bi-star text-warning"></i>
+              {%endif%}
+              
+          {% endfor %}
+          {% endif %}
+          ({{ product.average_rating }}/5) </p>
+            
+            <p class="card-title"><h5>
+              <s>${{ product.mrp }}</s>  ${{ product.selling_price }}
+            </h5></p>
+           
+            <div class="card-footer d-flex justify-content-between align-items-center pt-3 px-0 pb-0 mt-auto" style="background-color: #F7F8F9;">
+              <!-- Left: Add to Cart -->
+              <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Add to Cart</button>
+              </form>
+          
+              <!-- Right: Heart & QR Code Icons -->
+              <div class="d-flex">
+                  <a href="" class="btn ">  
+                    <form method="POST" action="{% url 'add_to_wishlist' product.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger me-0"><i class="bi bi-suit-heart-fill"></i></button>
+                  </form>
+                  </a>
+                  <a href="#!" data-bs-toggle="modal" data-bs-target="#qrModal{{ product.id }}" 
+                     class="btn  ">  
+                     <button type="submit" class="btn btn-outline-dark"><i class="bi bi-qr-code"></i></button>
+                  </a>
+              </div>
+          </div>
+          
+          
+          </div>
+        </div>
+      </div>
+      {%endfor%}
+      
+      </div>
+      </div>
+      </section>
+      {% for product in products %}
+
+      <div class="modal fade mt-5" id="qrModal{{ product.id }}" tabindex="-1" aria-labelledby="qrModalLabel{{ product.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="qrModalLabel{{ product.id }}">QR Code for {{ product.name }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+              <img src="{% url 'generate_qr' product.id %}" alt="QR Code" class="img-fluid">
+              <br><br>
+              <a href="{% url 'product_farm_detail' product.id %}" target="_blank">
+                  View Product Farm Details
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+{%endfor%}
+
+
+
+{% for product in products %}
+    
+      
+     
+      
+    </div>
+    {% endfor %}
+  </div>  
+
+{%include 'footer.html'%}
+{% endblock %}
+
+
+
+
+ <!-- Product Detail Modal for Each Product -->
+ <div class="modal fade mt-5" id="productModal{{ product.id }}" tabindex="-1" aria-labelledby="productModalLabel{{ product.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="productModalLabel{{ product.id }}">{{ product.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card product-card">
+          <div class="row g-0">
+            <!-- Product Image Column -->
+            <div class="col-md-6">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+              {% else %}
+                <img src="https://via.placeholder.com/600x400?text=No+Image" alt="No image available" class="product-image">
+              {% endif %}
+            </div>
+            <!-- Product Details Column -->
+            <div class="col-md-6 d-flex align-items-center">
+              <div class="card-content">
+                <h2 class="text-center mb-3">{{ product.name }}</h2>
+                <p class="text-center text-muted">{{ product.small_discription }}</p>
+                <hr>
+                <p>{{ product.discription }}</p>
+                <ul class="list-group list-group-flush mb-3">
+                  <li class="list-group-item"><strong>MRP:</strong> ₹{{ product.mrp }}</li>
+                  <li class="list-group-item"><strong>Selling Price:</strong> ₹{{ product.selling_price }}</li>
+                  <li class="list-group-item"><strong>Quantity:</strong> {{ product.quantity }}</li>
+                  <li class="list-group-item"><strong>Ratings:</strong> {{ product.ratings }}</li>
+                  {% if product.farming_origin %}
+                    <li class="list-group-item">
+                      <strong>Farming Origin:</strong>
+                      {% if product.farming_origin.name %}
+                        {{ product.farming_origin.name }}
+                      {% else %}
+                        {{ product.farming_origin }}
+                      {% endif %}
+                    </li>
+                  {% endif %}
+                </ul>
+                {% if product.farming_video %}
+                  <div class="mb-3 video-container">
+                    <video class="w-100" controls>
+                      <source src="{{ product.farming_video.url }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                {% endif %}
+                <div class="d-grid">
+                  <button class="btn btn-custom btn-lg">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End Product Card -->
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{%block title%}
+Profile
+    {%endblock%}
+{% block content %}
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md">
+            <div class="card">
+                <div class="card-header text-white" style="background-color: #2b7abd;">
+                    Profile Page
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- ✅ Use Bootstrap flexbox to align text & button inline -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="h4">Profile Information</span>
+                                <a class="btn btn-primary btn-sm" href="{% url 'profile_update' %}">Edit</a>
+                            </div>
+                            <hr>
+                            <table class="table bg-white table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Name</th>
+                                        <td>{{ user.username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Email</th>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Phone</th>
+                                        <td>{{ user.profile.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Address</th>
+                                        <td>{{ user.profile.address }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Pincode</th>
+                                        <td>{{ user.profile.pincode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">City</th>
+                                        <td>{{ user.profile.city }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">State</th>
+                                        <td>{{ user.profile.state }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <img class="img-thumbnail" src="{{ user.profile.profile_image.url }}" alt="Profile Picture">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+
+{% endblock %}

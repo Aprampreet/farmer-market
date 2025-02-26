@@ -1,0 +1,115 @@
+{% load static %}
+
+<style>
+  /* Footer Styling */
+  footer {
+      background-color: #2b7abd;
+      color: white;
+      font-size: 14px;
+      padding-top: 20px;
+  }
+
+  /* Make footer stick to the bottom */
+  html, body {
+      height: 100%;
+  }
+  .wrapper {
+      min-height: 60%;
+      display: flex;
+      flex-direction: column;
+  }
+  .content {
+      flex: 1;
+  }
+  .footer-content {
+      text-align: left;
+  }
+
+  /* Footer Links */
+  .footer-links a {
+      color: #f8f9fa;
+      text-decoration: none;
+      transition: color 0.3s ease-in-out;
+  }
+  .footer-links a:hover {
+      color: #ffcc00;
+  }
+
+  /* Social Icons */
+  .social-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      transition: transform 0.3s ease-in-out;
+  }
+  .social-icons a:hover {
+      transform: scale(1.2);
+  }
+</style>
+
+<div class="wrapper">
+    <div class="content">
+        
+    </div>
+
+    <footer class="text-center text-lg-start text-white mt-auto">
+        <div class="container text-center text-md-start pt-4 pb-4">
+            <div class="row mt-3">
+                <!-- Left Column - Logo & Copyright -->
+                <div class="col-12 col-lg-3 col-sm-12 mb-3 text-center text-md-left">
+                    <a href="#">
+                        <img src="{% static 'logo.png' %}" height="90" alt="Site Logo" />
+                    </a>
+                    <p class="mt-2 text-white">&copy; 2024 Arritio. All Rights Reserved.</p>
+                </div>
+
+                <!-- Store Links -->
+                <div class="col-6 col-sm-4 col-lg-2 footer-links">
+                    <h6 class="text-uppercase fw-bold mb-2">Store</h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Find Store</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">Blogs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Information Links -->
+                <div class="col-6 col-sm-4 col-lg-2 footer-links">
+                    <h6 class="text-uppercase fw-bold mb-2">Information</h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Money Refund</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Refunds</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Links -->
+                <div class="col-6 col-sm-4 col-lg-2 footer-links">
+                    <h6 class="text-uppercase fw-bold mb-2">Support</h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documents</a></li>
+                        <li><a href="#">Account Restore</a></li>
+                        <li><a href="#">My Orders</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-lg-3 col-md-6 col-sm-12 text-center text-md-left">
+                    <h6 class="text-uppercase fw-bold mb-2">Follow Us</h6>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Font Awesome for Social Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Order Tracking</h2>
+    <p><strong>Order ID:</strong> #{{ order.id }}</p>
+    <p><strong>Current Status:</strong> <span class="badge bg-primary">{{ order.get_status_display }}</span></p>
+
+    <div class="progress mt-3">
+        <div class="progress-bar" role="progressbar" 
+             style="width: {% if order.status == 'pending' %}10{% elif order.status == 'confirmed' %}30{% elif order.status == 'shipped' %}60{% elif order.status == 'out_for_delivery' %}80{% else %}100{% endif %}%;" 
+             aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+
+    <p class="mt-3">Track the progress of your order.</p>
+</div>
+<script>
+    function updateOrderStatus() {
+        fetch("{% url 'track_order' order.id %}")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('order-status').innerHTML = data;
+        });
+    }
+    
+    setInterval(updateOrderStatus, 5000); // Update every 5 seconds
+    </script>
+    
+{% endblock %}

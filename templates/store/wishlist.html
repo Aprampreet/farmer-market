@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{%block title%}
+Wishlist
+    {%endblock%}
+{% block content %}
+{%include 'messages.html'%}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">❤️ Your Wishlist</h2>
+
+    {% if wishlist_items %}
+    <div class="row">
+        {% for item in wishlist_items %}
+        <div class="col-lg-4 col-md-6 col-sm-12 d-flex">
+            <div class="card w-100 my-2 shadow-lg ptr" style="border-radius: 15px; overflow: hidden; transition: transform 0.2s ease-in-out;">
+                <!-- Product Image with Hover Effect -->
+                <a href="{% url 'product_detail' item.product.id %}">
+                    <img src="{{ item.product.image.url }}" class="card-img-top product-image" alt="{{ item.product.name }}" 
+                         style="height: 250px; object-fit: cover; transition: opacity 0.3s;">
+                </a>
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <a href="{% url 'product_detail' item.product.id %}" class="text-dark text-decoration-none">
+                            {{ item.product.name }}
+                        </a>
+                    </h5>
+                    
+                    <!-- Product Rating -->
+                    <p class="text-muted mb-1">
+                        {% if item.product.average_rating == 0 %}
+                            No ratings yet
+                        {% else %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= item.product.average_rating %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% elif item.product.average_rating|floatformat:1 >= forloop.counter|add:"-1"|floatformat:1 and item.product.average_rating|floatformat:1 < forloop.counter|floatformat:1 %}
+                                    <i class="bi bi-star-half text-warning"></i> 
+                                {% else %}
+                                    <i class="bi bi-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ item.product.average_rating }}/5)
+                        {% endif %}
+                    </p>
+                    
+
+                    <h5 class="mb-3">
+                        <s class="text-muted">${{ item.product.mrp }}</s>  
+                        <strong class="text-success">${{ item.product.selling_price }}</strong>
+                    </h5>
+
+                    <div class="d-flex justify-content-between mt-auto">
+                        <a href="{% url 'product_detail' item.product.id %}" class="btn btn-outline-primary flex-grow-1 me-2">View</a>
+                        <a href="{% url 'remove_from_wishlist' item.product.id %}" class="btn btn-outline-danger">
+                            <i class="bi bi-trash3"></i> Remove
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-danger fs-4 mt-5">🚫 Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% include 'footer.html' %}
+
+{% endblock %}

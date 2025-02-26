@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{%block title%}
+Add-Product
+    {%endblock%}
+{% block content %}
+{%include 'messages.html'%}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text mb-4">Add New Product</h2>
+        <hr>
+
+        <!-- ✅ Display Django messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Product Name</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        {{ form.category }}  
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        {{ form.type }}  
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Short Description</label>
+                        {{ form.small_discription }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Origin of Farming</label>
+                        {{ form.origen_of_farming }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">origen_details</label>
+                        {{ form.origen_details }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="form-group">
+                    <label class="form-label">Full Description</label>
+                    {{ form.discription }}
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MRP</label>
+                        {{ form.mrp }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Selling Price</label>
+                        {{ form.selling_price }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Stock Quantity</label>
+                        {{ form.quantity }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="form-group">
+                    <label class="form-label">Upload Product Image</label>
+                    {{ form.image }}
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="form-group">
+                    <label class="form-label">Upload Farming Video (Optional)</label>
+                    {{ form.farming_video }}
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-success btn-lg">Add Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% include 'footer.html' %}
+
+{% endblock %}

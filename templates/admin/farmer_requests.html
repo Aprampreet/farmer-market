@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{%block title%}
+farmer-request
+    {%endblock%}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .request-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+    .request-card:hover {
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    .profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #2b7abd;
+    }
+    .equipment-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 5px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+    }
+    .equipment-img:hover {
+        transform: scale(1.2);
+    }
+    .btn-approve {
+        background: #28a745;
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+    .btn-approve:hover {
+        background: #218838;
+    }
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+    .btn-reject:hover {
+        background: #c82333;
+    }
+</style>
+{%include 'messages.html'%}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">Pending Farmer Requests</h2>
+
+    {% if farmers %}
+    <div class="row">
+        {% for farmer in farmers %}
+        <div class="col-md-6 mb-4">
+            <div class="request-card p-4">
+                <div class="d-flex align-items-center">
+                    <img src="{{ farmer.addhar_image.url }}" class="profile-img me-3" alt="Aadhaar Image">
+                    <div>
+                        <h5 class="mb-0">{{ farmer.name.username }}</h5>
+                        <small class="text-muted">{{ farmer.company_name }}</small>
+                    </div>
+                </div>
+                <hr>
+                <p><strong>Land:</strong> {{ farmer.total_land }} {{ farmer.land_unit }}</p>
+                <p><strong>Location:</strong> {{ farmer.location_of_farm }}</p>
+
+                <!-- Equipment Images -->
+                <p ><strong>Equipment Images:</strong></p>
+                <div class="d-flex mt-5">
+                    {% if farmer.equipment_images.all %}
+                        {% for image in farmer.equipment_images.all|slice:":3" %}
+                            <img src="{{ image.image.url }}" class="equipment-img me-2" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.id }}" alt="Equipment Image">
+                            
+                            <!-- Modal for Full Image View -->
+                            <div class="modal fade " style="margin-top: 7%;" id="imageModal{{ image.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Equipment Image</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ image.image.url }}" class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No Equipment Images</p>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{% url 'approve_farmer' farmer.id %}" class="btn btn-approve px-4">✔ Approve</a>
+                    <a href="{% url 'reject_farmer' farmer.id %}" class="btn btn-reject px-4">✖ Reject</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">No pending farmer requests.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

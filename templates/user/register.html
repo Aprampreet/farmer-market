@@ -1,0 +1,53 @@
+{%extends 'base.html'%}
+{%block title%}
+Register
+    {%endblock%}
+{%block content%}
+<style>
+    .container{
+        border-radius: 20px;
+    }
+form input, form textarea, form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+}
+form input:focus, form textarea:focus, form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+</style>
+<div class="container shadow p-4 mt-5 mb-5">
+<form method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Username</label>
+        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      
+      </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" name="password1">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Confirm-Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password2">
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <p class="text-muted mt-3">Already Having An Account ? <a class="text-primary" href="{%url 'login'%}">Login. </a></p>
+    {%if messages %}
+    {%for message in messages%}
+    <p class="text-danger">{{message}}</p>
+    {%endfor%}
+    {%endif%}
+  </form>
+</div>
+{%include 'footer.html'%}
+{%endblock%}
